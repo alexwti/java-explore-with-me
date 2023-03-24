@@ -1,32 +1,17 @@
 package ru.practicum.mapper;
 
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import ru.practicum.dto.CreateEndpointHitDto;
-import ru.practicum.dto.ResponseEndpointHitDto;
+import ru.practicum.dto.EndpointHitDto;
 import ru.practicum.model.EndPointHit;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+@Mapper(componentModel = "spring")
 
-@Component
-public class StatsMapper {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+public interface StatsMapper {
+    @Mapping(source = "timestamp", target = "timestamp", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    EndPointHit toEndpointHit(CreateEndpointHitDto createEndpointHitDto);
 
-    public EndPointHit toEndpointHit(CreateEndpointHitDto createEndpointHitDto) {
-        return new EndPointHit(null,
-                createEndpointHitDto.getApp(),
-                createEndpointHitDto.getUri(),
-                createEndpointHitDto.getIp(),
-                LocalDateTime.parse(createEndpointHitDto.getTimestamp(), FORMATTER));
-    }
-
-    public ResponseEndpointHitDto toResponseEndpointHitDto(EndPointHit endPointHit) {
-        return new ResponseEndpointHitDto(
-                endPointHit.getId(),
-                endPointHit.getApp(),
-                endPointHit.getUri(),
-                endPointHit.getIp(),
-                endPointHit.getTimestamp().format(FORMATTER)
-        );
-    }
+    @Mapping(source = "timestamp", target = "timestamp", dateFormat = "yyyy-MM-dd HH:mm:ss")
+    EndpointHitDto toResponseEndpointHitDto(EndPointHit endPointHit);
 }
