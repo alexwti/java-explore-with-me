@@ -10,9 +10,9 @@ import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.ConflictException;
 import ru.practicum.exception.NotFoundException;
-import ru.practicum.request.dto.RequestDto;
+import ru.practicum.request.dto.RequestsDto;
 import ru.practicum.request.dto.RequestStatusUpdateDto;
-import ru.practicum.request.dto.RequestStatusUpdateResultDto;
+import ru.practicum.request.dto.RequestUpdateDto;
 import ru.practicum.request.mapper.RequestMapper;
 import ru.practicum.request.model.Request;
 import ru.practicum.request.repository.RequestRepository;
@@ -37,7 +37,7 @@ public class RequestServiceImpl implements RequestService {
 
 
     @Transactional
-    public RequestDto createRequest(Long userId, Long eventId) {
+    public RequestsDto createRequest(Long userId, Long eventId) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new NotFoundException("User not found");
         });
@@ -74,30 +74,24 @@ public class RequestServiceImpl implements RequestService {
 
     @Transactional
     @Override
-    public RequestStatusUpdateResultDto updateRequests(Long userId, Long eventId, RequestStatusUpdateDto requestStatusUpdateDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> {
-            throw new NotFoundException("User not found");
-        });
+    public RequestUpdateDto updateRequests(Long userId, Long eventId, RequestStatusUpdateDto requestStatusUpdateDto) {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> {
             throw new NotFoundException("Event not found");
         });
         if (!event.getInitiator().getId().equals(userId)) {
-            throw new NotFoundException(String.format("Event with id %s is not your", eventId));
+            throw new NotFoundException("You don't have event with id " + eventId);
         }
-        RequestStatusUpdateResultDto requestUpdateDto = new RequestStatusUpdateResultDto(new ArrayList<>(), new ArrayList<>());
+        if (!event.getRequestModeration() || event.getParticipantLimit() == 0) {
+            throw new ConflictException("Confirmation is not required");
+        }
+        RequestUpdateDto requestUpdateDto = new RequestUpdateDto(new ArrayList<>(), new ArrayList<>());
+        Integer confirmedRequests = requestRepository.findByEventIdConfirmed(eventId).size();
         List<Request> requests = requestRepository.findByEventIdAndRequestsIds(eventId,
                 requestStatusUpdateDto.getRequestIds());
-        int confirmedRequests = requestRepository.findByEventIdConfirmed(eventId).size() + requests.size();
-        if (event.getParticipantLimit() != 0 && confirmedRequests > event.getParticipantLimit() &&
-                Objects.equals(requestStatusUpdateDto.getStatus(), RequestStatus.CONFIRMED.name())) {
-            requests.forEach(request -> request.setStatus(RequestStatus.REJECTED));
-            List<RequestDto> requestDto = requests.stream()
-                    .map(requestMapper::toRequestDto)
-                    .collect(Collectors.toList());
 
-            requestUpdateDto.setRejectedRequests(requestDto);
-            requestRepository.saveAll(requests);
-            throw new ConflictException("Participants limit exceeded");
+        if (confirmedRequests + requests.size() > event.getParticipantLimit() &&
+                requestStatusUpdateDto.getStatus().name().equalsIgnoreCase(RequestStatus.CONFIRMED.name())) {
+            throw new ConflictException("Requests limit exceeded");
         }
 
         if (requestStatusUpdateDto.getStatus().name().equalsIgnoreCase(RequestStatus.REJECTED.name())) {
@@ -107,25 +101,26 @@ public class RequestServiceImpl implements RequestService {
                 }
                 request.setStatus(RequestStatus.REJECTED);
             });
-            List<RequestDto> requestDto = requests.stream()
+            List<RequestsDto> requestsDto = requests.stream()
                     .map(requestMapper::toRequestDto)
                     .collect(Collectors.toList());
-            requestUpdateDto.setRejectedRequests(requestDto);
+            requestUpdateDto.setRejectedRequests(requestsDto);
             requestRepository.saveAll(requests);
         } else if (requestStatusUpdateDto.getStatus().name().equalsIgnoreCase(RequestStatus.CONFIRMED.name())
                 && requestStatusUpdateDto.getRequestIds().size() <= event.getParticipantLimit() - confirmedRequests) {
             requests.forEach(request -> request.setStatus(RequestStatus.CONFIRMED));
-            List<RequestDto> requestDto = requests.stream()
+            List<RequestsDto> requestsDto = requests.stream()
                     .map(requestMapper::toRequestDto)
                     .collect(Collectors.toList());
-            requestUpdateDto.setConfirmedRequests(requestDto);
+            requestUpdateDto.setConfirmedRequests(requestsDto);
             requestRepository.saveAll(requests);
         }
         return requestUpdateDto;
+
     }
 
     @Transactional
-    public RequestDto cancelRequest(Long userId, Long requestId) {
+    public RequestsDto cancelRequest(Long userId, Long requestId) {
         Request request = requestRepository.findByIdAndRequesterId(requestId, userId)
                 .orElseThrow(() -> {
                             throw new NotFoundException("Request not found");
@@ -136,7 +131,7 @@ public class RequestServiceImpl implements RequestService {
         return requestMapper.toRequestDto(requestRepository.save(request));
     }
 
-    public List<RequestDto> findByRequesterId(Long userId) {
+    public List<RequestsDto> findByRequesterId(Long userId) {
         log.info("Request sent");
         return requestRepository.findByRequesterId(userId).stream()
                 .map(requestMapper::toRequestDto)
@@ -144,16 +139,9 @@ public class RequestServiceImpl implements RequestService {
                 );
     }
 
-    public List<RequestDto> findByEventIdAndInitiatorId(Long userId, Long eventId) {
+    public List<RequestsDto> findByEventIdAndInitiatorId(Long userId, Long eventId) {
         log.info("Requests sent");
         return requestRepository.findByEventIdAndInitiatorId(eventId, userId).stream()
-                .map(requestMapper::toRequestDto)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public List<RequestDto> findAll() {
-        return requestRepository.findAll().stream()
                 .map(requestMapper::toRequestDto)
                 .collect(Collectors.toList());
     }

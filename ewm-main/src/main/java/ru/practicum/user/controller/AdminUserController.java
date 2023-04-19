@@ -1,6 +1,7 @@
 package ru.practicum.user.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.user.dto.UserDto;
@@ -17,6 +18,7 @@ public class AdminUserController {
     private final UserService userService;
 
     @PostMapping
+    @ResponseStatus(value = HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody UserDto userDto) {
         return userService.createUser(userDto);
     }
@@ -27,6 +29,7 @@ public class AdminUserController {
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long id) {
         userService.deleteUser(id);
     }

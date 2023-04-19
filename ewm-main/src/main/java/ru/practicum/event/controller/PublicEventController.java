@@ -33,9 +33,4 @@ public class PublicEventController {
     public EventFullDto getEvent(@PathVariable Long id, HttpServletRequest request) {
         return eventService.getEvent(id, request);
     }
-
-    @GetMapping("/all")
-    public List<EventFullDto> findAll() {
-        return eventService.findAll();
-    }
 }

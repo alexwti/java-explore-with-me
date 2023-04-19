@@ -1,22 +1,21 @@
 package ru.practicum.request.service;
 
 
-import ru.practicum.request.dto.RequestDto;
+import ru.practicum.request.dto.RequestsDto;
 import ru.practicum.request.dto.RequestStatusUpdateDto;
-import ru.practicum.request.dto.RequestStatusUpdateResultDto;
+import ru.practicum.request.dto.RequestUpdateDto;
 
 import java.util.List;
 
 public interface RequestService {
-    RequestDto createRequest(Long userId, Long eventId);
+    RequestsDto createRequest(Long userId, Long eventId);
 
-    RequestStatusUpdateResultDto updateRequests(Long userId, Long eventId, RequestStatusUpdateDto requestStatusUpdateDto);
+    RequestUpdateDto updateRequests(Long userId, Long eventId, RequestStatusUpdateDto requestStatusUpdateDto);
 
-    RequestDto cancelRequest(Long userId, Long requestId);
+    RequestsDto cancelRequest(Long userId, Long requestId);
 
-    List<RequestDto> findByEventIdAndInitiatorId(Long eventId, Long userId);
+    List<RequestsDto> findByEventIdAndInitiatorId(Long eventId, Long userId);
 
-    List<RequestDto> findByRequesterId(Long userId);
+    List<RequestsDto> findByRequesterId(Long userId);
 
-    List<RequestDto> findAll();
 }

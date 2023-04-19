@@ -18,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 @Repository
 public class EventRepositoryImpl implements EventRepositoryCustom {
-    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private final EntityManager entityManager;
 
 
@@ -43,7 +42,7 @@ public class EventRepositoryImpl implements EventRepositoryCustom {
         }
 
         if (states != null && states.size() > 0) {
-            Predicate containStates = root.get("state").in(states);
+            Predicate containStates = root.get("eventState").in(states);
             criteria = builder.and(criteria, containStates);
         }
 

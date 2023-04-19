@@ -345,11 +345,4 @@ public class EventServiceImpl implements EventService {
         sendStat(Arrays.asList(event), request);
         return eventMapper.toEventFullDto(event);
     }
-
-    @Override
-    public List<EventFullDto> findAll() {
-        return eventRepository.findAll().stream()
-                .map(eventMapper::toEventFullDto)
-                .collect(Collectors.toList());
-    }
 }

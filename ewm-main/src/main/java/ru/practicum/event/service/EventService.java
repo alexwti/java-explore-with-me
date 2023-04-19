@@ -34,6 +34,4 @@ public interface EventService {
     void setView(Event event);
 
     void setView(List<Event> events);
-
-    List<EventFullDto> findAll();
 }

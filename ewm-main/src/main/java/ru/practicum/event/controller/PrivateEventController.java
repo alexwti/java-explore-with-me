@@ -9,9 +9,9 @@ import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.EventUpdateRequestDto;
 import ru.practicum.event.dto.NewEventDto;
 import ru.practicum.event.service.EventService;
-import ru.practicum.request.dto.RequestDto;
+import ru.practicum.request.dto.RequestsDto;
 import ru.practicum.request.dto.RequestStatusUpdateDto;
-import ru.practicum.request.dto.RequestStatusUpdateResultDto;
+import ru.practicum.request.dto.RequestUpdateDto;
 import ru.practicum.request.service.RequestService;
 
 import javax.validation.Valid;
@@ -40,12 +40,12 @@ public class PrivateEventController {
     }
 
     @GetMapping("/{eventId}/requests")
-    public List<RequestDto> findByEventIdAndInitiatorId(@PathVariable Long userId, @PathVariable Long eventId) {
+    public List<RequestsDto> findByEventIdAndInitiatorId(@PathVariable Long userId, @PathVariable Long eventId) {
         return requestService.findByEventIdAndInitiatorId(userId, eventId);
     }
 
     @PatchMapping("/{eventId}/requests")
-    public RequestStatusUpdateResultDto updateRequests(@PathVariable Long userId, @PathVariable Long eventId, @RequestBody RequestStatusUpdateDto requestStatusUpdateDto) {
+    public RequestUpdateDto updateRequests(@PathVariable Long userId, @PathVariable Long eventId, @RequestBody RequestStatusUpdateDto requestStatusUpdateDto) {
         return requestService.updateRequests(userId, eventId, requestStatusUpdateDto);
     }
 

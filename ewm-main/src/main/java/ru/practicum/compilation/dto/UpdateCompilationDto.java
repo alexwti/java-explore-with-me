@@ -9,7 +9,7 @@ import java.util.List;
 @Setter
 @Getter
 @NoArgsConstructor
-public class UpdateCompilationRequest {
+public class UpdateCompilationDto {
     private List<Long> events;
     private Boolean pinned;
     private String title;

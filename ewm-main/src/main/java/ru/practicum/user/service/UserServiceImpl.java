@@ -45,7 +45,6 @@ public class UserServiceImpl implements UserService {
                     .map(userMapper::toUserDto)
                     .collect(Collectors.toList());
         } else {
-            List<User> result = userRepository.findAll(page).toList();
             return userRepository.findAll(page).stream()
                     .map(userMapper::toUserDto)
                     .collect(Collectors.toList());
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void deleteUser(Long id) {
-        log.info(String.format("User with id: %s was deleted"), id);
+        log.info(String.format("User with id: %s was deleted", id));
         userRepository.deleteById(id);
     }
 }

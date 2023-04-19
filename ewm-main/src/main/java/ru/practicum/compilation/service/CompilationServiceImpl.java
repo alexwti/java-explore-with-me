@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.compilation.dto.CompilationDto;
 import ru.practicum.compilation.dto.NewCompilationDto;
+import ru.practicum.compilation.dto.UpdateCompilationDto;
 import ru.practicum.compilation.mapper.CompilationMapper;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.compilation.repository.CompilationRepository;
@@ -60,22 +61,22 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
     @Transactional
-    public CompilationDto updateCompilation(Long compId, NewCompilationDto newCompilationDto) {
+    public CompilationDto updateCompilation(Long compId, UpdateCompilationDto updateCompilationDto) {
 
         Compilation compilation = compilationRepository.findById(compId)
                 .orElseThrow(() -> new NotFoundException(String.format("Compilation id %s not found", compId)));
-        List<Long> eventsIds = newCompilationDto.getEvents();
+        List<Long> eventsIds = updateCompilationDto.getEvents();
         if (eventsIds != null) {
-            compilation.setEvents(eventRepository.findAllByIdIn(newCompilationDto.getEvents()));
+            compilation.setEvents(eventRepository.findAllByIdIn(updateCompilationDto.getEvents()));
         }
-        if (newCompilationDto.getPinned() != null) {
-            compilation.setPinned(newCompilationDto.getPinned());
+        if (updateCompilationDto.getPinned() != null) {
+            compilation.setPinned(updateCompilationDto.getPinned());
         }
-        if (newCompilationDto.getTitle() != null) {
-            compilation.setTitle(newCompilationDto.getTitle());
+        if (updateCompilationDto.getTitle() != null) {
+            compilation.setTitle(updateCompilationDto.getTitle());
         }
         Compilation updCompilation = compilationRepository.save(compilation);
-        log.info(String.format("Compilation id % was updated", compId));
+        log.info(String.format("Compilation id %s was updated", compId));
         setView(updCompilation);
         return mapper.toCompilationDto(updCompilation);
     }
@@ -83,11 +84,13 @@ public class CompilationServiceImpl implements CompilationService {
     @Transactional
     public void deleteCompilation(Long compId) {
         compilationRepository.deleteById(compId);
-        log.info(String.format("Compilation id % was deleted", compId));
+        log.info(String.format("Compilation id %s was deleted", compId));
     }
 
     private void setView(Compilation compilation) {
         List<Event> events = compilation.getEvents();
-        eventService.setView(events);
+        if (events != null && events.size() > 0) {
+            eventService.setView(events);
+        }
     }
 }
