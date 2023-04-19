@@ -29,7 +29,7 @@ services:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root
 
-  ewm-main:
+  ewm-service:
     build: ewm-main
     container_name: ewm-main
     ports:
