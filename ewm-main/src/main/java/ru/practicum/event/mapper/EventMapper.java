@@ -4,8 +4,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.springframework.stereotype.Component;
 import ru.practicum.event.dto.EventFullDto;
-import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.EventNewDto;
+import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.model.Event;
 
 @Mapper(componentModel = "spring")

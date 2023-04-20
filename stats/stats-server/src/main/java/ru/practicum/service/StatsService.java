@@ -10,5 +10,4 @@ public interface StatsService {
     EndpointHitDto createHit(CreateEndpointHitDto createEndpointHitDto);
 
     List<ViewStats> getStats(String start, String end, List<String> uris, Boolean unique);
-
 }
