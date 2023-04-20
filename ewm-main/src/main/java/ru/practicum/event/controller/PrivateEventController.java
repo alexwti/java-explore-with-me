@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.event.dto.EventFullDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.EventUpdateRequestDto;
-import ru.practicum.event.dto.NewEventDto;
+import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.service.EventService;
 import ru.practicum.request.dto.RequestStatusUpdateDto;
 import ru.practicum.request.dto.RequestUpdateDto;
@@ -28,8 +28,8 @@ public class PrivateEventController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public EventFullDto createEvent(@PathVariable Long userId, @Valid @RequestBody NewEventDto newEventDto) {
-        return eventService.createEvent(userId, newEventDto);
+    public EventFullDto createEvent(@PathVariable Long userId, @Valid @RequestBody EventNewDto eventNewDto) {
+        return eventService.createEvent(userId, eventNewDto);
     }
 
     @GetMapping

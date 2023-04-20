@@ -15,9 +15,9 @@ import ru.practicum.enums.EventState;
 import ru.practicum.enums.SortValue;
 import ru.practicum.enums.UserStateAction;
 import ru.practicum.event.dto.EventFullDto;
+import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.EventUpdateRequestDto;
-import ru.practicum.event.dto.NewEventDto;
 import ru.practicum.event.mapper.EventMapper;
 import ru.practicum.event.model.Event;
 import ru.practicum.event.repository.EventRepository;
@@ -45,15 +45,15 @@ public class EventServiceImpl implements EventService {
 
     @Transactional
     @Override
-    public EventFullDto createEvent(Long userId, NewEventDto newEventDto) {
+    public EventFullDto createEvent(Long userId, EventNewDto eventNewDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(String.format("User with id = %s not found", userId)));
-        Category category = categoryRepository.findById(newEventDto.getCategory())
+        Category category = categoryRepository.findById(eventNewDto.getCategory())
                 .orElseThrow(() -> new NotFoundException("Category not found"));
-        if (newEventDto.getEventDate().isBefore(LocalDateTime.now())) {
-            throw new ConflictException(String.format("Wrong data: event date must be in the past: %s", newEventDto.getEventDate()));
+        if (eventNewDto.getEventDate().isBefore(LocalDateTime.now())) {
+            throw new ConflictException(String.format("Wrong data: event date must be in the past: %s", eventNewDto.getEventDate()));
         }
-        Event event = eventMapper.toEventModel(newEventDto);
+        Event event = eventMapper.toEventModel(eventNewDto);
         event.setCategory(category);
         event.setInitiator(user);
         event.setCreatedOn(LocalDateTime.now());

@@ -4,16 +4,16 @@ package ru.practicum.event.service;
 import ru.practicum.enums.EventState;
 import ru.practicum.enums.SortValue;
 import ru.practicum.event.dto.EventFullDto;
+import ru.practicum.event.dto.EventNewDto;
 import ru.practicum.event.dto.EventShortDto;
 import ru.practicum.event.dto.EventUpdateRequestDto;
-import ru.practicum.event.dto.NewEventDto;
 import ru.practicum.event.model.Event;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface EventService {
-    EventFullDto createEvent(Long userId, NewEventDto newEventDto);
+    EventFullDto createEvent(Long userId, EventNewDto eventNewDto);
 
     List<EventShortDto> getEvents(Long userId, Integer from, Integer size);
 
