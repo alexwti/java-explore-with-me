@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.EndPointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.exceptions.StatsException;
 
@@ -20,21 +20,19 @@ import java.util.Map;
 @Service
 public class StatsClient {
     private final String serverUrl;
-    //private final RestTemplate restTemplate;
     RestTemplate restTemplate = new RestTemplate();
 
 
     public StatsClient(@Value("${stats-server.url}") String serverUrl) {
         this.serverUrl = serverUrl;
-        //this.restTemplate = restTemplate;
     }
 
-    public void addStats(EndpointHitDto endpointHitDto) {
+    public void addStats(EndPointHitDto endpointHitDto) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
-        HttpEntity<EndpointHitDto> requestEntity = new HttpEntity<>(endpointHitDto, headers);
-        restTemplate.exchange(serverUrl + "/hit", HttpMethod.POST, requestEntity, EndpointHitDto.class);
+        HttpEntity<EndPointHitDto> requestEntity = new HttpEntity<>(endpointHitDto, headers);
+        restTemplate.exchange(serverUrl + "/hit", HttpMethod.POST, requestEntity, EndPointHitDto.class);
     }
 
     public List<ViewStatsDto> getStats(String start, String end, List<String> uris, Boolean unique) {

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.StatsClient;
 import ru.practicum.category.model.Category;
 import ru.practicum.category.repository.CategoryRepository;
-import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.EndPointHitDto;
 import ru.practicum.dto.ViewStatsDto;
 import ru.practicum.enums.AdminStateAction;
 import ru.practicum.enums.EventState;
@@ -252,16 +252,16 @@ public class EventServiceImpl implements EventService {
     public void sendStat(List<Event> events, HttpServletRequest request) {
         LocalDateTime now = LocalDateTime.now();
         String remoteAddr = request.getRemoteAddr();
-        String nameService = "ewm-main";
+        String nameService = "ewm-main-service";
 
-        EndpointHitDto requestDto = new EndpointHitDto();
+        EndPointHitDto requestDto = new EndPointHitDto();
         requestDto.setTimestamp(now.format(dateTimeFormatter));
         requestDto.setUri("/events");
         requestDto.setApp(nameService);
         requestDto.setIp(request.getRemoteAddr());
         statsClient.addStats(requestDto);
         for (Event event : events) {
-            EndpointHitDto requestDtoEv = new EndpointHitDto();
+            EndPointHitDto requestDtoEv = new EndPointHitDto();
             requestDtoEv.setTimestamp(now.format(dateTimeFormatter));
             requestDtoEv.setUri("/events/" + event.getId());
             requestDtoEv.setApp(nameService);

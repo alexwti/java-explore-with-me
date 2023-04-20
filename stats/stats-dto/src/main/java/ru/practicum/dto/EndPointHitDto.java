@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EndpointHitDto {
+public class EndPointHitDto {
     private Long id;
     private String app;
     private String uri;
