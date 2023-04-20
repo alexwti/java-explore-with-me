@@ -40,7 +40,7 @@ public class StatsServiceImpl implements StatsService {
         }
     }
 
-    public List<EndPointHit> getAllStats(){
+    public List<EndPointHit> getAllStats() {
         return statsRepository.getAllStats();
     }
 }

@@ -34,8 +34,9 @@ public class StatsController {
         return list;
         //return statsService.getStats(start, end, uris, unique);
     }
+
     @GetMapping("/allstats")
-    public List<EndPointHit> getAllStats(){
+    public List<EndPointHit> getAllStats() {
         return statsService.getAllStats();
     }
 
