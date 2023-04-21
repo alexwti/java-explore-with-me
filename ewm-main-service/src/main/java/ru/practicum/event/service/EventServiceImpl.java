@@ -266,7 +266,7 @@ public class EventServiceImpl implements EventService {
             requestDtoEv.setUri("/events/" + event.getId());
             requestDtoEv.setApp(nameService);
             requestDtoEv.setIp(remoteAddr);
-            statsClient.addStats(requestDto);
+            statsClient.addStats(requestDtoEv);
         }
     }
 

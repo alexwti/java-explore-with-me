@@ -26,10 +26,4 @@ public interface StatsRepository extends JpaRepository<EndPointHit, Long> {
     List<ViewStats> getStatsByDateUniqueIp(@Param("start") LocalDateTime start,
                                            @Param("end") LocalDateTime end,
                                            @Param("uris") List<String> uris);
-
-    @Query(value = "SELECT new ru.practicum.model.EndPointHit(s.id, s.app, s.uri, s.ip, s.timestamp) " +
-            "FROM EndPointHit s"
-    )
-    List<EndPointHit> getAllStats();
-
 }

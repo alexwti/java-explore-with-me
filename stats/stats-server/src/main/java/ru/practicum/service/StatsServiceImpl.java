@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ru.practicum.dto.CreateEndpointHitDto;
 import ru.practicum.dto.EndPointHitDto;
 import ru.practicum.mapper.StatsMapper;
-import ru.practicum.model.EndPointHit;
 import ru.practicum.model.ViewStats;
 import ru.practicum.repository.StatsRepository;
 
@@ -35,12 +34,7 @@ public class StatsServiceImpl implements StatsService {
         if (unique) {
             return statsRepository.getStatsByDateUniqueIp(parseStart, parseEnd, uris);
         } else {
-            List<ViewStats> list = statsRepository.getStatsByDate(parseStart, parseEnd, uris);
-            return list;
+            return statsRepository.getStatsByDate(parseStart, parseEnd, uris);
         }
-    }
-
-    public List<EndPointHit> getAllStats() {
-        return statsRepository.getAllStats();
     }
 }
