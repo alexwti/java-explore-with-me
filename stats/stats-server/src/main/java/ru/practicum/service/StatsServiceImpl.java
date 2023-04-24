@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.dto.CreateEndpointHitDto;
-import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.EndPointHitDto;
 import ru.practicum.mapper.StatsMapper;
 import ru.practicum.model.ViewStats;
 import ru.practicum.repository.StatsRepository;
@@ -22,7 +22,7 @@ public class StatsServiceImpl implements StatsService {
     private final StatsMapper statsMapper;
 
     @Override
-    public EndpointHitDto createHit(CreateEndpointHitDto createEndpointHitDto) {
+    public EndPointHitDto createHit(CreateEndpointHitDto createEndpointHitDto) {
         log.info("createEndpointHitDto: {}", createEndpointHitDto.toString());
         return statsMapper.toResponseEndpointHitDto(statsRepository.save(statsMapper.toEndpointHit(createEndpointHitDto)));
     }
@@ -34,8 +34,7 @@ public class StatsServiceImpl implements StatsService {
         if (unique) {
             return statsRepository.getStatsByDateUniqueIp(parseStart, parseEnd, uris);
         } else {
-            List<ViewStats> list = statsRepository.getStatsByDate(parseStart, parseEnd, uris);
-            return list;
+            return statsRepository.getStatsByDate(parseStart, parseEnd, uris);
         }
     }
 }

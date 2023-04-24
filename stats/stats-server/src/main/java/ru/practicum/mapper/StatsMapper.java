@@ -3,7 +3,7 @@ package ru.practicum.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import ru.practicum.dto.CreateEndpointHitDto;
-import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.EndPointHitDto;
 import ru.practicum.model.EndPointHit;
 
 @Mapper(componentModel = "spring")
@@ -13,5 +13,5 @@ public interface StatsMapper {
     EndPointHit toEndpointHit(CreateEndpointHitDto createEndpointHitDto);
 
     @Mapping(source = "timestamp", target = "timestamp", dateFormat = "yyyy-MM-dd HH:mm:ss")
-    EndpointHitDto toResponseEndpointHitDto(EndPointHit endPointHit);
+    EndPointHitDto toResponseEndpointHitDto(EndPointHit endPointHit);
 }

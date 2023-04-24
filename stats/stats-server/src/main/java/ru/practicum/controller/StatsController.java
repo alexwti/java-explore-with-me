@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.dto.CreateEndpointHitDto;
-import ru.practicum.dto.EndpointHitDto;
+import ru.practicum.dto.EndPointHitDto;
 import ru.practicum.model.ViewStats;
 import ru.practicum.service.StatsService;
 
@@ -19,7 +19,7 @@ public class StatsController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public EndpointHitDto createHit(@RequestBody @Validated CreateEndpointHitDto createEndpointHitDto) {
+    public EndPointHitDto createHit(@RequestBody @Validated CreateEndpointHitDto createEndpointHitDto) {
         return statsService.createHit(createEndpointHitDto);
     }
 
