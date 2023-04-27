@@ -4,6 +4,7 @@ drop table if exists locations cascade;
 drop table if exists events cascade;
 drop table if exists compilations cascade;
 drop table if exists compilations_events cascade;
+drop table if exists comments cascade;
 
 
 CREATE TABLE IF NOT EXISTS USERS
@@ -127,8 +128,7 @@ create table if not exists events
     ID
 )
                          on delete cascade,
-    constraint EVENTS_USERS_ID_FK
-    foreign key
+    constraint EVENTS_USERS_ID_FK foreign key
 (
     initiator_id
 )
@@ -168,8 +168,7 @@ create table if not exists Requests
 (
     120
 ) not null,
-    constraint REQUESTS_EVENTS_ID_FK
-    foreign key
+    constraint REQUESTS_EVENTS_ID_FK foreign key
 (
     event_id
 )
@@ -225,11 +224,48 @@ CREATE TABLE IF NOT EXISTS compilations_events
 (
     id
 ),
-    CONSTRAINT fk_to_events
+    CONSTRAINT fk_to_events FOREIGN KEY
+(
+    event_id
+) REFERENCES events
+(
+    id
+)
+    );
+
+CREATE TABLE IF NOT EXISTS comments
+(
+    id
+    BIGINT
+    GENERATED
+    BY
+    DEFAULT AS
+    IDENTITY
+    PRIMARY
+    KEY
+    NOT
+    NULL,
+    text
+    VARCHAR
+(
+    250
+),
+    created_time TIMESTAMP WITHOUT TIME ZONE,
+    user_id BIGINT,
+    event_id BIGINT,
+    CONSTRAINT fk_comment_to_events
     FOREIGN KEY
 (
     event_id
 ) REFERENCES events
+(
+    id
+),
+    CONSTRAINT fk_comment_to_users
+    FOREIGN KEY
+(
+    user_id
+) REFERENCES users
 (
     id
 )
